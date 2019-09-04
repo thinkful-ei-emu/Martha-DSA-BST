@@ -5,9 +5,10 @@
  * 
  *                        3
  *                1                4
- *                    2                 6
- *                                    5      9
+ *                    2                 6-C
+ *                                    5      9-N
  *                                         7
+ *                                            
  * 
  * EASYQUESTION
  * 
@@ -176,6 +177,7 @@ function main(){
   BST.insert(2);
   BST.insert(5);
   BST.insert(7);
+  //BST.remove(7);
   return BST;
 
   // let bst = new BinarySearchTree();
@@ -236,28 +238,61 @@ function tree(t){
  * 
  */
 
+//try to get working
+// function height(tree, currHeight = 1){
+//   let maxHeight = 0;
+//   if(tree === undefined){
+//     return 0;
+//   }
+//   if(tree.left === null && tree.right === null){
+//     let height = currHeight;
+//     if(height > maxHeight){
+//       maxHeight = height;
+//     }
+//     debugger;
+//   }
+//   if(tree.right){
+//     height(tree.right, currHeight + 1);
+//   }
+//   if(tree.left){
+//     height(tree.left, currHeight + 1);
+//   }
+// }
 
-function height(tree, currHeight = 1){
-  let maxHeight = 0;
-  if(tree === undefined){
-    return 'Height of 0';
+function height(tree, leftVal = 1, rightVal = 1){
+  if(tree.key === null && tree.parent === null){
+    return 0;
   }
   if(tree.left === null && tree.right === null){
-    console.log(currHeight);
-    if(currHeight > maxHeight){
-      maxHeight = currHeight;
+    if(leftVal >= rightVal){
+      return leftVal;
+    } else{
+      return rightVal;
     }
   }
-  if(tree.right){
-    height(tree.right, currHeight + 1);
+  if(tree.left && tree.right){
+    leftVal++;
+    rightVal++;
+    return height(tree.left, leftVal, rightVal), height(tree.right, leftVal, rightVal);
   }
   if(tree.left){
-    height(tree.left, currHeight + 1);
+    leftVal++;
+    return height(tree.left, leftVal, rightVal);
   }
-  console.log('max', maxHeight);
+  if(tree.right){
+    rightVal++;
+    return height(tree.right, leftVal, rightVal);
+  }
 }
 
-console.log(height(main()));
+let shorttree = new BinarySearchTree();
+shorttree.insert(1);
+shorttree.insert(2);
+shorttree.insert(4);
+shorttree.insert(7);
+shorttree.insert(9);
+
+//console.log(height(shorttree));
 
 //need to check each branch and see which goes the furthest down 
 //start by checking going down the left all the way 
@@ -279,7 +314,7 @@ console.log(height(main()));
  *                9
  *            5        13
  *         3   7     11    15
- *                          
+ *                        
  * 
  * 
  * start with middle 
@@ -308,3 +343,99 @@ function arrayBSt(arr, start = 0, end = arr.length-1){
 let arr = [3, 5, 7, 9, 11, 13, 15];
 
 
+function isThisBinary(tree){
+  if(tree === null){
+    return 'Empty tree';
+  }
+
+  if(tree.left){
+    if(tree.left > tree.key){
+      return false;
+    }
+  }
+  if(tree.right){
+    if(tree.right < tree.key){
+      return false;
+    }
+  }
+  else {
+    return isThisBinary(tree.left), isThisBinary(tree.right);
+  }
+  return true;
+}
+
+//console.log(isThisBinary(main()));
+
+let notSearch = {key: 1, left: 5, right: 6};
+//console.log(isThisBinary(notSearch));
+
+
+function thirdLargest(tree){
+  let currentNode = tree;
+  let nextNode = currentNode.right;
+  while(nextNode.right !== null){
+    currentNode = nextNode;
+    nextNode = nextNode.right;
+  }
+  if(nextNode.left !== null && nextNode.left.right !== null){
+    return nextNode.left;
+  }
+  if(nextNode.left !== null && nextNode.left.left !== null){
+    return 2, nextNode.left.left;
+  }
+  if(nextNode.left === null && currentNode.left !== null){
+    return 3, currentNode.left;
+  }
+  if(nextNode.left === null && currentNode.left === null){
+    return 4, currentNode.parent;
+  }
+  else {
+    return currentNode;
+  }
+}
+
+console.log(thirdLargest(main()));
+
+
+/**
+largest has a left -> right  => left is 3rd
+largest has a left -> left  => 2nd left is the 3rd
+largest !left -> current -> left => left is 3rd
+largest !left -> current !left => parent is 3rd 
+
+ *                        3
+ *                1                4
+ *                    2                 6
+ *                                    5      9
+ *                                         7
+ * 
+ * 
+ * 
+ * 
+ *                9
+ *            5        13             <= Balanced
+ *         3   7    11    15
+ * 
+ * 
+ *                9
+ *            5        13             <= Balanced
+ *         3   7     11    15
+ *          4  
+ * 
+ * 
+ * 
+ *                9
+ *            5        13             <= UNBalanced
+ *         3   7     11    15       b/c 4.5 is 2 apart from the shallowest
+ *          4                       leaf nodes (7, 11, 15)
+ *            4.5                  
+ */ 
+
+function balanced(tree){
+
+}
+
+
+function areTheyTheSame(arr1, arr2){
+  
+}
