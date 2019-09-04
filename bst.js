@@ -340,7 +340,7 @@ function arrayBSt(arr, start = 0, end = arr.length-1){
   return tree;
 }
 
-let arr = [3, 5, 7, 9, 11, 13, 15];
+//let arr = [3, 5, 7, 9, 11, 13, 15];
 
 
 function isThisBinary(tree){
@@ -394,7 +394,7 @@ function thirdLargest(tree){
   }
 }
 
-console.log(thirdLargest(main()));
+//console.log(thirdLargest(main()));
 
 
 /**
@@ -420,7 +420,7 @@ largest !left -> current !left => parent is 3rd
  *                9
  *            5        13             <= Balanced
  *         3   7     11    15
- *          4  
+ *          4 6               
  * 
  * 
  * 
@@ -431,11 +431,227 @@ largest !left -> current !left => parent is 3rd
  *            4.5                  
  */ 
 
+
+/**
+  * check length of each branch 
+  * check the lengths of each branch if there is a 
+  * difference that is more than 2 then false
+  * 
+  * An empty tree is height-balanced. A non-empty binary tree T is balanced if:
+1) Left subtree of T is balanced
+2) Right subtree of T is balanced
+3) The difference between heights of left subtree and right subtree is not more than 1. 
+*/
+
 function balanced(tree){
+  if(tree.key === null && tree.parent === null){
+    return true;
+  }
+  if(tree.left === null && tree.right === null){
+    //return true;
+  }
 
 }
 
 
-function areTheyTheSame(arr1, arr2){
+//simulate inserting into tree if results are the same => true
+
+/**       arr1                  
+ *     3 
+ *     5 after3 
+ *     4 after 3 before 5
+ *     6 after 4 and after 5
+ *     1 before 3
+ *     0 before 1 
+ *     2 after 0 and after 1
+ *arr1 =>           3
+                  1    5  
+ *              0  2   4  6 
+
+
+
+            3
+            1 before 3  => left 
+            5 after 3   => right
+            2 after 1 before 3  
+            4 after 3 before 5
+            6 after 5
+            0 before 1
+
+
+ arr2 =>            3
+ *                1    5
+                0  2  4  6
+ */
+
+class _Node { 
+  constructor(value, next){
+    this.value = value; 
+    this.next = next;
+  }
+}
+
+class LinkedList {
+  constructor(){
+    this.head = null;
+  }
+
+  insertFirst(item){
+    this.head = new _Node(item, this.head);
+  }
+
+  insertLast(item){
+    if(this.head === null){
+      this.insertFirst(item);
+    }
+    else {
+      //starts with the first node
+      let tempNode = this.head;
+      while(tempNode.next !== null){
+        tempNode = tempNode.next;
+      }
+      tempNode.next = new _Node(item, null);
+    }
+  }
+
+  insertBefore(item, beforeNode){
+    if(this.head === null){
+      this.insertFirst(item);
+    }
+    if(beforeNode === this.head){
+      this.insertFirst(item);
+    }
+    let currNode = this.head;
+    let prevNode = this.head;
   
+    let targetNode = this.find(beforeNode);
+    while(currNode !== targetNode){
+      prevNode = currNode;
+      currNode = currNode.next;
+    }
+    prevNode.next = new _Node(item, targetNode);
+    // console.log(prevNode);
+    // console.log(prevNode.next);
+  }
+
+  insertAfter(item, afterNode){
+    if(this.head === null){
+      this.insertFirst(item);
+    }
+    let currNode = this.head;
+    let targetNode = this.find(afterNode);
+
+    while(currNode !== targetNode){
+      currNode = currNode.next;
+    }
+    currNode.next = new _Node(item, targetNode.next);
+    // console.log(currNode);
+    // console.log(currNode.next);
+  }
+
+  insertAt(item, location){
+    if(this.head === null){
+      this.insertFirst(item);
+    }
+    if(location === 0){
+      this.insertFirst(item);
+    }
+    let currNode = this.head;
+    let prevNode = this.head;
+    for(let i=0; i<location; i++){
+      prevNode = currNode;
+      currNode = currNode.next;
+    }
+    prevNode.next = new _Node(item, currNode);
+    console.log(prevNode);
+    console.log(prevNode.next);
+  }  
+
+  find(item){
+    //start at the head
+    let currNode = this.head;
+    //if the list is empty 
+    if(!this.head){
+      return null; 
+    }
+    //check for the item
+    while(currNode.value !==item){
+      //return ull if its the end of the list and 
+      //the item is not on the list
+      if(currNode.next === null){
+        return null;
+      }
+      else{
+        //otherwise keep looking
+        currNode = currNode.next;
+      }
+    }
+    //found it
+    return currNode;
+  }
+
+  remove(item){
+    //if the list is empty
+    if(!this.head){
+      return null;
+    }
+    //if node to remove is the head, make the next the new head
+    if(this.head.value === item){
+      this.head = this.head.next;
+      return;
+    }
+    //start at the head
+    let currNode = this.head;
+    //previous node
+    let previousNode = this.head;
+
+    while((currNode !== null) && (currNode.value !== item)){
+      //save the previous node
+      previousNode = currNode; 
+      currNode = currNode.next; 
+    }
+    if(currNode === null){
+      console.log('Item not found');
+      return;
+    }
+    //making new connection of next pointer
+    previousNode.next = currNode.next;
+  }
 }
+
+//the same exact tree!
+function areTheyTheSame(arr1, arr2){
+  if(arr1[0] !== arr2[0]){
+    return false;
+  }
+  let linkedList1 = new LinkedList();
+  //let linkedList2 = new LinkedList();
+
+  linkedList1.insertFirst(arr1[0]);
+  let currItem = linkedList1.head;
+  for(let i = 0; i < arr1.length; i++){
+    console.log('curr', currItem);
+    //console.log(arr1[i]);
+    if(arr1[i] < currItem){
+      linkedList1.insertBefore(currItem);
+      currItem=arr1[i];
+      i++;
+    }
+    if(arr1[i] > currItem){
+      linkedList1.insertAfter(currItem);
+      currItem=arr1[i];
+      i++;
+    }
+  }
+  //console.log(linkedList1);
+
+  //linkedList2.insertFirst(arr2[0]);
+}
+
+let arrUno = [3, 5, 4, 6, 1, 0, 2];
+let arr2 = [3, 1, 5, 2, 4, 6, 0];
+
+console.log(areTheyTheSame(arrUno, arr2)); //should be true
+
+
+
