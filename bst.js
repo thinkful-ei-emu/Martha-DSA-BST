@@ -286,13 +286,14 @@ function height(tree, leftVal = 1, rightVal = 1){
 }
 
 let shorttree = new BinarySearchTree();
+shorttree.insert(4);
 shorttree.insert(1);
 shorttree.insert(2);
-shorttree.insert(4);
 shorttree.insert(7);
 shorttree.insert(9);
+shorttree.insert(8);
 
-//console.log(height(shorttree));
+console.log(height(shorttree));
 
 //need to check each branch and see which goes the furthest down 
 //start by checking going down the left all the way 
@@ -364,10 +365,10 @@ function isThisBinary(tree){
   return true;
 }
 
-//console.log(isThisBinary(main()));
+// console.log(isThisBinary(main()));
 
 let notSearch = {key: 1, left: 5, right: 6};
-//console.log(isThisBinary(notSearch));
+// console.log(isThisBinary(notSearch));
 
 
 function thirdLargest(tree){
@@ -651,7 +652,7 @@ function areTheyTheSame(arr1, arr2){
 let arrUno = [3, 5, 4, 6, 1, 0, 2];
 let arr2 = [3, 1, 5, 2, 4, 6, 0];
 
-console.log(areTheyTheSame(arrUno, arr2)); //should be true
+//console.log(areTheyTheSame(arrUno, arr2)); //should be true
 
 
 
